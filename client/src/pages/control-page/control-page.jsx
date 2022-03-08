@@ -23,9 +23,21 @@ class Component extends React.Component {
                     marginTop: "20px"
                 }}>
                     <Tilt tiltAngleXManual={this.state.angleX} tiltAngleYManual={this.state.angleY} glareEnable={false}>
-                        <div style={{ height: '300px', width: '300px', backgroundColor: '#FFD300', borderColor: '#FFFF99'}}>
-                            <div>Axis x: {this.state.angleX}°</div>
-                            <div>Axis y: {this.state.angleY}°</div>
+                        <div style={{ 
+                            height: '300px', 
+                            width: '300px', 
+                            backgroundColor: '#FFD300', 
+                            borderColor: '#FFFF99',
+                            marginTop: "20px",
+                            padding: "40px",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            fontSize: "25px"
+                        }}>
+                            <div>Axis x: {this.state.angleX.toFixed(0)}°</div>
+                            <div>Axis y: {this.state.angleY.toFixed(0)}°</div>
                         </div>
                     </Tilt>
                 </div>
