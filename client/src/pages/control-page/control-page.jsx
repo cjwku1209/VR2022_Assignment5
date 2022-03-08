@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Joystick, JoystickShape } from 'react-joystick-component';
 import Tilt from 'react-parallax-tilt';
+import {SettingOutlined, FireOutlined, StopOutlined} from '@ant-design/icons'
+import {Button, Slider, InputNumber, Row, Col} from 'antd'
 
 class Component extends React.Component {
 
@@ -10,14 +12,21 @@ class Component extends React.Component {
 		this.state = {
             angleX : 0,
             angleY : 0,
-            movement: "NONE"
+            movement: "NONE",
+            fire: false,
+            fireRate: 0.5,
+            force: 1000
 		}
 	}
 
 	render() {
 		return (
 			<React.Fragment>
+                <div style={{color: "white", position: "absolute", right: "20px", top: "20px"}}>
+                    <Button icon={<SettingOutlined/>} size="large" style={{background: "#329D9C", borderColor: "#C8EAD1"}} type="primary"/>
+                </div>
                 <div style={{backgroundColor: "#01303f", width: "100vw", height: "100vh"}}>
+                    
                     <div style={{
                         display: 'flex',
                         flexDirection: "column",
@@ -46,13 +55,43 @@ class Component extends React.Component {
                                 </div>
                             </Tilt>
                         </div> 
-                        <div style={{color: "white", fontSize: "20px", textAlign: "center", margin: "30px"}}>
+                        <div style={{color: "white", fontSize: "20px", textAlign: "center", padding: "30px"}}>
                             <span>Axis x: {this.state.angleX.toFixed(0)}°, </span>
                             <span>Axis y: {this.state.angleY.toFixed(0)}°</span>
                             <div>
                                 Movement: <b style={{color: "#89d6fb"}}>{this.state.movement}</b>
                             </div>
                         </div>
+                    </div>
+                    <div style={{display: "flex", flexDirection: "row", alignContent:"center", alignItems: "center", justifyContent: "center", width: "100vw"}}>
+                        <div style={{color: "white", width: "70px"}}>
+                            Fire Rate:
+                        </div>
+                        <Slider
+                            style={{width: "30%"}}
+                            min={0} 
+                            max={5}
+                            step={0.1}
+                            value={this.state.fireRate}
+                            onChange={(val)=>{
+                                this.setState({fireRate:val})
+                            }}/>
+                            <InputNumber value={this.state.fireRate}/>
+                    </div>
+                    <div style={{display: "flex", flexDirection: "row", alignContent:"center", alignItems: "center", justifyContent: "center", width: "100vw", paddingTop: "5px"}}>
+                        <div style={{color: "white", width: "70px"}}>
+                            Force:
+                        </div>
+                        <Slider
+                            style={{width: "30%"}}
+                            min={0} 
+                            max={5000}
+                            step={100}
+                            value={this.state.force}
+                            onChange={(val)=>{
+                                this.setState({force:val})
+                            }}/>
+                            <InputNumber value={this.state.force}/>
                     </div>
                     <div style={{
                         position: "fixed",
@@ -62,10 +101,9 @@ class Component extends React.Component {
                         width: "100vw",
                         justifyContent: "center",
                         alignItems: "center",
-                        paddingTop: "100px"
                     }}>
                         <div style={{
-                            width: "50%", 
+                            width: "33%", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
@@ -90,7 +128,38 @@ class Component extends React.Component {
                             </div>
                         </div>
                         <div style={{
-                            width: "50%", 
+                            width: "33%", 
+                            display: "flex", 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            flexDirection: "column"
+                            }}>
+                            <Button 
+                                onClick={()=>{this.setState({fire: !this.state.fire})}}
+                                style={{width: 100, height: 100, backgroundColor: "#801100", borderColor: "#D73502"}}>
+                                {
+                                    (()=>{
+                                        if(this.state.fire){
+                                            return  <StopOutlined style={{fontSize: 50, color: "#FAC000"}}/>
+                                        }
+                                        else{
+                                            return <FireOutlined style={{fontSize: 50, color: "#FAC000"}}/>
+                                            
+                                        }
+                                    })()
+                                }
+                            </Button>
+                            <div style={{fontSize: "20px", color: "#FAC000", marginTop: "10px"}}>
+                                {
+                                    (()=>{
+                                        if(this.state.fire) return "Stop"
+                                        else return "Shoot"
+                                    })()
+                                }
+                            </div>
+                        </div>
+                        <div style={{
+                            width: "33%", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
