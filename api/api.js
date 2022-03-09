@@ -1,6 +1,17 @@
 import express from 'express';
 import {users} from "../models/users";
+import {Controller} from "../models/controller"
 export const api = express.Router();
+
+
+function checkIfUserExist(uid) {
+	users.findById(uid).then((user)=>{
+		return true;
+	}).catch((err)=>{
+		return false;
+	})
+}
+
 
 api.get('/api', (request, response) => {
 	response.status(200);
@@ -18,12 +29,28 @@ api.post('/api/create-user', (request, response)=>{
 		password: request.body.password,
 		email: request.body.email
 	});
+
 	const promise = user.save();
-	promise.then(()=>{
-		response.status(201).json({
-			success: true,
-			message: "Account Created"
-		});
+	promise.then((user)=>{
+		const shootController = new Controller({
+			fireRate: 0.5,
+			force: 1000,
+			levitation: 0,
+			angleX: 0,
+			angleY: 0,
+			shoot: false,
+			movement: "None",
+			user_id: user._id
+		})
+		const controllerPromise = shootController.save();
+		controllerPromise.then((controller)=>{
+			response.status(201).json({
+				success: true,
+				message: "Account Created"
+			});
+		}).catch((err)=>{
+			throw err
+		})
 	}).catch((err)=>{
 		response.status(403).json({
 			success: false,
@@ -63,6 +90,40 @@ api.post('/api/login', (request, response)=>{
 		response.status(400).json({
 			success: false,
 			message: err.message
+		});
+	})
+})
+
+api.post('/api/update-controller', (request, response)=>{
+	let validUser = checkIfUserExist(request.body.user_id)
+	if(validUser=== false){
+		response.status(400).json({
+			success: false,
+			message: "User does not exist"
+		});
+	}
+	Controller.findOneAndUpdate({user_id: request.body.user_id}, request.body).then((controller)=>{
+		response.status(201).json({
+			success: true,
+			controller: request.body,
+			message: "Update Successful"
+		});
+	})
+})
+
+api.post('/api/controller', (request, response)=>{
+	let validUser = checkIfUserExist(request.body.user_id)
+	if(validUser=== false){
+		response.status(400).json({
+			success: false,
+			message: "User does not exist"
+		});
+	}
+	Controller.find({user_id: request.body.user_id}).then((controller)=>{
+		response.status(201).json({
+			success: true,
+			controller: controller,
+			message: "Fetch controller successful"
 		});
 	})
 })

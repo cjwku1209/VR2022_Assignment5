@@ -12,6 +12,6 @@ let controller_schema = new Schema({
     user_id: {type: String, required: false},
 })
 
-let Session = mongoose.model("Controller", controller_schema);
+let Controller = mongoose.model("Controller", controller_schema);
 
-exports.Session = Session;
+exports.Controller = Controller;
