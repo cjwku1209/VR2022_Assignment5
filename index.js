@@ -19,16 +19,6 @@ app.use(express.json());
 app.use(morgan('common'));
 app.use(api);
 
-app.use(session({
-	secret: 'secret',
-	resave: false,
-	saveUninitialized: false,
-	store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/VR2022_HW5'}),
-	cookie: { maxAge: 600 * 1000 },
-}));
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-app.use(users);
-
 if (NODE_ENV === 'production') {
 	app.use(express.static(path.join(__dirname, '../client/build')));
 	app.get("/*", (request, response) => {
@@ -39,3 +29,14 @@ if (NODE_ENV === 'production') {
 app.listen(PORT, () => {
 	console.info(`Server listening at port ${PORT}.`);
 });
+
+app.use(session({
+	secret: 'secret',
+	resave: false,
+	saveUninitialized: false,
+	store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/VR2022_HW5'}),
+	cookie: { maxAge: 600 * 1000 },
+}));
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+app.use(users);
+
