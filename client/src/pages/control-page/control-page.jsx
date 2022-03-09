@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Joystick, JoystickShape } from 'react-joystick-component';
 import Tilt from 'react-parallax-tilt';
 import {SettingOutlined, FireOutlined, StopOutlined} from '@ant-design/icons'
-import {Button, Slider, InputNumber, Row, Col} from 'antd'
+import {Button, Slider, InputNumber} from 'antd'
 
 class Component extends React.Component {
 
@@ -124,7 +124,7 @@ class Component extends React.Component {
                                 }}
                                 />
                             <div style={{fontSize: "20px", color: "#d4f0fc", marginTop: "10px"}}>
-                                Position
+                                Movement
                             </div>
                         </div>
                         <div style={{

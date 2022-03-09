@@ -6,7 +6,6 @@ import { AlertComponent } from '../../components/alert-component/alert-component
 import {LoginAction} from "../../redux/login/login-action";
 import {AlertAction} from "../../redux/alert/alert-action";
 
-
 class Component extends React.Component {
 	
 	constructor(props){
@@ -228,16 +227,15 @@ class Component extends React.Component {
 							<div style={{padding: "10px"}}>
 							<Button variant="success" style={{width: "100%"}}
 								onClick={()=>{
-									// if(this.state.loginUsername === "" || this.state.loginPassword===""){
-									// 	this.props.dispatch(AlertAction.alertStart("Empty username or password"))
-									// }
-									// else{
-									// 	this.props.dispatch(LoginAction.LoginStart(JSON.stringify({
-									// 		"username": this.state.loginUsername,
-									// 		"password": this.state.loginPassword
-									// 	})))
-									// }
-									this.props.navigate.push("/control");
+									if(this.state.loginUsername === "" || this.state.loginPassword===""){
+										this.props.dispatch(AlertAction.alertStart("Empty username or password"))
+									}
+									else{
+										this.props.dispatch(LoginAction.LoginStart(JSON.stringify({
+											"username": this.state.loginUsername,
+											"password": this.state.loginPassword
+										})))
+									}
 								}}
 								>
 								Login
