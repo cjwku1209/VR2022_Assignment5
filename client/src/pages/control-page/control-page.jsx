@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Joystick, JoystickShape } from 'react-joystick-component';
 import Tilt from 'react-parallax-tilt';
+import {LoginAction} from "../../redux/login/login-action";
 import {SettingOutlined, FireOutlined, StopOutlined} from '@ant-design/icons'
-import {Button, Slider, InputNumber} from 'antd'
+import {Button, Slider, InputNumber, Dropdown, Menu} from 'antd'
 
 class Component extends React.Component {
 
@@ -20,11 +21,39 @@ class Component extends React.Component {
 		}
 	}
 
+
+    componentDidMount() {
+        if(this.props.LoginReducer.login === false){
+            this.props.history.push("/");
+        }
+    }
+
 	render() {
 		return (
 			<React.Fragment>
                 <div style={{color: "white", position: "absolute", right: "20px", top: "20px"}}>
-                    <Button icon={<SettingOutlined/>} size="large" style={{background: "#329D9C", borderColor: "#C8EAD1"}} type="primary"/>
+                    <Dropdown
+                        overlay={()=>{
+                            return(
+                                <Menu>
+                                    <Menu.Item>
+                                        Settings
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <a onClick={()=>{
+                                            this.props.dispatch(LoginAction.Logout())
+                                            this.props.history.push("/")
+                                        }}>
+                                            Logout
+                                        </a>
+                                    </Menu.Item>
+                                </Menu>
+                            )
+                            
+                        }}
+                    >
+                        <Button icon={<SettingOutlined/>} size="large" style={{background: "#329D9C", borderColor: "#C8EAD1"}} type="primary"/>
+                    </Dropdown>
                 </div>
                 <div style={{backgroundColor: "#01303f", width: "100vw", height: "100vh"}}>
                     
@@ -213,6 +242,8 @@ class Component extends React.Component {
 
 }
 
-const Redux = connect(store => ({}))(Component);
+const Redux = connect(store => ({
+    LoginReducer: store.LoginReducer,
+}))(Component);
 
 export const ControlPage = Redux;
