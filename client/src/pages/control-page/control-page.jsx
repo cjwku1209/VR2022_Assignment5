@@ -15,7 +15,8 @@ class Component extends React.Component {
             movement: "NONE",
             fire: false,
             fireRate: 0.5,
-            force: 1000
+            force: 1000,
+            leviation: 0
 		}
 	}
 
@@ -103,16 +104,15 @@ class Component extends React.Component {
                         alignItems: "center",
                     }}>
                         <div style={{
-                            width: "33%", 
+                            width: "31%", 
                             display: "flex", 
                             alignItems: "center", 
-                            justifyContent: "center", 
                             flexDirection: "column"
                             }}>
                             <Joystick 
                                 baseShape={JoystickShape.Square} 
                                 stickShape={JoystickShape.Square} 
-                                size={100} 
+                                size={80} 
                                 sticky={false} 
                                 baseColor={"#d4f0fc"} 
                                 stickColor={"#89d6fb"}
@@ -128,7 +128,29 @@ class Component extends React.Component {
                             </div>
                         </div>
                         <div style={{
-                            width: "33%", 
+                            width: "7%", 
+                            display: "flex", 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            flexDirection: "column"
+                            }}>
+                                <Slider style={{
+                                    height: 70
+                                }}
+                                vertical 
+                                min={0} 
+                                max={0.3}
+                                step={0.01}
+                                value={this.state.leviation}
+                                onChange={(val)=>{
+                                    this.setState({leviation:val})
+                                }}/>
+                            <div style={{fontSize: "20px", color: "#d4f0fc", marginTop: "10px"}}>
+                                Up
+                            </div>
+                        </div>
+                        <div style={{
+                            width: "31%", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
@@ -136,14 +158,14 @@ class Component extends React.Component {
                             }}>
                             <Button 
                                 onClick={()=>{this.setState({fire: !this.state.fire})}}
-                                style={{width: 100, height: 100, backgroundColor: "#801100", borderColor: "#D73502"}}>
+                                style={{width: 80, height: 80, backgroundColor: "#801100", borderColor: "#D73502"}}>
                                 {
                                     (()=>{
                                         if(this.state.fire){
-                                            return  <StopOutlined style={{fontSize: 50, color: "#FAC000"}}/>
+                                            return  <StopOutlined style={{fontSize: 30, color: "#FAC000"}}/>
                                         }
                                         else{
-                                            return <FireOutlined style={{fontSize: 50, color: "#FAC000"}}/>
+                                            return <FireOutlined style={{fontSize: 30, color: "#FAC000"}}/>
                                             
                                         }
                                     })()
@@ -159,14 +181,14 @@ class Component extends React.Component {
                             </div>
                         </div>
                         <div style={{
-                            width: "33%", 
+                            width: "31%", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
                             flexDirection: "column"
                             }}>
                             <Joystick 
-                                size={100} 
+                                size={80} 
                                 sticky={true} 
                                 baseColor={"#FFFF99"} 
                                 stickColor={"#FFD300"}
