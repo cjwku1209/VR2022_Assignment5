@@ -2,8 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Joystick, JoystickShape } from 'react-joystick-component';
 import Tilt from 'react-parallax-tilt';
+import {LoginAction} from "../../redux/login/login-action";
 import {SettingOutlined, FireOutlined, StopOutlined} from '@ant-design/icons'
-import {Button, Slider, InputNumber, Row, Col} from 'antd'
+import {Button, Slider, InputNumber, Dropdown, Menu} from 'antd'
+import { ControllerAction } from '../../redux/controller/controller-action';
 
 class Component extends React.Component {
 
@@ -13,17 +15,53 @@ class Component extends React.Component {
             angleX : 0,
             angleY : 0,
             movement: "NONE",
-            fire: false,
+            shoot: false,
             fireRate: 0.5,
-            force: 1000
+            force: 1000,
+            levitation: 0
 		}
 	}
+
+    updateController(){
+        this.props.dispatch(ControllerAction.controllerUpdateStart(this.props.LoginReducer.user._id, JSON.stringify(this.state)))
+    }
+
+    componentDidMount() {
+        if(this.props.LoginReducer.login === false){
+            this.props.history.push("/");
+        }
+        this.updateController()
+        // console.log(this.props.LoginReducer.user._id)
+        // this.props.dispatch(ControllerAction.controllerFetchStart(this.props.LoginReducer.user._id))
+        // console.log(this.props.ControllerReducer.controller);
+    }
 
 	render() {
 		return (
 			<React.Fragment>
                 <div style={{color: "white", position: "absolute", right: "20px", top: "20px"}}>
-                    <Button icon={<SettingOutlined/>} size="large" style={{background: "#329D9C", borderColor: "#C8EAD1"}} type="primary"/>
+                    <Dropdown
+                        overlay={()=>{
+                            return(
+                                <Menu>
+                                    <Menu.Item>
+                                        Settings
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <a onClick={()=>{
+                                            this.props.dispatch(LoginAction.Logout())
+                                            this.props.history.push("/")
+                                        }}>
+                                            Logout
+                                        </a>
+                                    </Menu.Item>
+                                </Menu>
+                            )
+                            
+                        }}
+                    >
+                        <Button icon={<SettingOutlined/>} size="large" style={{background: "#329D9C", borderColor: "#C8EAD1"}} type="primary"/>
+                    </Dropdown>
                 </div>
                 <div style={{backgroundColor: "#01303f", width: "100vw", height: "100vh"}}>
                     
@@ -74,7 +112,10 @@ class Component extends React.Component {
                             step={0.1}
                             value={this.state.fireRate}
                             onChange={(val)=>{
-                                this.setState({fireRate:val})
+                                this.setState({fireRate:val}, ()=>{
+                                    this.updateController()
+                                })
+                                
                             }}/>
                             <InputNumber value={this.state.fireRate}/>
                     </div>
@@ -89,7 +130,9 @@ class Component extends React.Component {
                             step={100}
                             value={this.state.force}
                             onChange={(val)=>{
-                                this.setState({force:val})
+                                this.setState({force:val}, ()=>{
+                                    this.updateController()
+                                })
                             }}/>
                             <InputNumber value={this.state.force}/>
                     </div>
@@ -103,47 +146,78 @@ class Component extends React.Component {
                         alignItems: "center",
                     }}>
                         <div style={{
-                            width: "33%", 
+                            width: "31%", 
                             display: "flex", 
                             alignItems: "center", 
-                            justifyContent: "center", 
                             flexDirection: "column"
                             }}>
                             <Joystick 
                                 baseShape={JoystickShape.Square} 
                                 stickShape={JoystickShape.Square} 
-                                size={100} 
+                                size={80} 
                                 sticky={false} 
                                 baseColor={"#d4f0fc"} 
                                 stickColor={"#89d6fb"}
                                 move={(stick)=>{
-                                    this.setState({movement: stick.direction})
+                                    this.setState({movement: stick.direction}, ()=>{
+                                        this.updateController()
+                                    })
                                 }}
                                 stop={()=>{
-                                    this.setState({movement: "NONE"})
+                                    this.setState({movement: "NONE"}, ()=>{
+                                        this.updateController()
+                                    })
                                 }}
                                 />
                             <div style={{fontSize: "20px", color: "#d4f0fc", marginTop: "10px"}}>
-                                Position
+                                Movement
                             </div>
                         </div>
                         <div style={{
-                            width: "33%", 
+                            width: "7%", 
+                            display: "flex", 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            flexDirection: "column"
+                            }}>
+                                <Slider style={{
+                                    height: 70
+                                }}
+                                vertical 
+                                min={0} 
+                                max={0.3}
+                                step={0.01}
+                                value={this.state.levitation}
+                                onChange={(val)=>{
+                                    this.setState({levitation:val}, ()=>{
+                                        this.updateController()
+                                    })
+                                }}/>
+                            <div style={{fontSize: "20px", color: "#d4f0fc", marginTop: "10px"}}>
+                                Up
+                            </div>
+                        </div>
+                        <div style={{
+                            width: "31%", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
                             flexDirection: "column"
                             }}>
                             <Button 
-                                onClick={()=>{this.setState({fire: !this.state.fire})}}
-                                style={{width: 100, height: 100, backgroundColor: "#801100", borderColor: "#D73502"}}>
+                                onClick={()=>{
+                                    this.setState({shoot: !this.state.shoot}, ()=>{
+                                        this.updateController()
+                                    })
+                                }}
+                                style={{width: 80, height: 80, backgroundColor: "#801100", borderColor: "#D73502"}}>
                                 {
                                     (()=>{
-                                        if(this.state.fire){
-                                            return  <StopOutlined style={{fontSize: 50, color: "#FAC000"}}/>
+                                        if(this.state.shoot){
+                                            return  <StopOutlined style={{fontSize: 30, color: "#FAC000"}}/>
                                         }
                                         else{
-                                            return <FireOutlined style={{fontSize: 50, color: "#FAC000"}}/>
+                                            return <FireOutlined style={{fontSize: 30, color: "#FAC000"}}/>
                                             
                                         }
                                     })()
@@ -152,21 +226,21 @@ class Component extends React.Component {
                             <div style={{fontSize: "20px", color: "#FAC000", marginTop: "10px"}}>
                                 {
                                     (()=>{
-                                        if(this.state.fire) return "Stop"
+                                        if(this.state.shoot) return "Stop"
                                         else return "Shoot"
                                     })()
                                 }
                             </div>
                         </div>
                         <div style={{
-                            width: "33%", 
+                            width: "31%", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
                             flexDirection: "column"
                             }}>
                             <Joystick 
-                                size={100} 
+                                size={80} 
                                 sticky={true} 
                                 baseColor={"#FFFF99"} 
                                 stickColor={"#FFD300"}
@@ -174,8 +248,9 @@ class Component extends React.Component {
                                     this.setState({
                                         angleX: stick.y,
                                         angleY: stick.x
+                                    }, ()=>{
+                                        this.updateController()
                                     })
-                                    
                                 }}/>
                             <div style={{fontSize: "20px", color: "#FFFF99", marginTop: "10px"}}>
                                 Angle
@@ -191,6 +266,9 @@ class Component extends React.Component {
 
 }
 
-const Redux = connect(store => ({}))(Component);
+const Redux = connect(store => ({
+    LoginReducer: store.LoginReducer,
+    ControllerReducer: store.ControllerReducer
+}))(Component);
 
 export const ControlPage = Redux;

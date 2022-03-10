@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
-import { Input, Form, Modal } from "antd";
+import { Input, Form, Modal, notification} from "antd";
+import { AlertComponent } from '../../components/alert-component/alert-component';
+import {LoginAction} from "../../redux/login/login-action";
+import {AlertAction} from "../../redux/alert/alert-action";
 
 class Component extends React.Component {
-
+	
 	constructor(props){
 		super(props);
 		this.state = {
@@ -19,9 +22,41 @@ class Component extends React.Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.LoginReducer.login === true){
+            this.props.history.push("/control");
+        }
+    }
+
 	render() {
 		return (
 			<React.Fragment>
+				{
+					(()=>{
+						if(this.props.AlertReducer.show) return <AlertComponent/>
+					})()
+				}
+				{
+                    (()=>{
+                        if(this.props.LoginReducer.accountModalSuccess){
+                            this.props.dispatch(LoginAction.LoginCreateModalClose(false))
+                            this.setState({
+                                createAccountModalVisibility: false,
+                                firstName: "",
+                                lastName: "",
+                                email: "",
+                                username: "",
+                                password: "",
+                            })
+                            return(notification['success']({
+                                message: 'Account Created',
+                                description:
+                                    'Your account has been successfully created.',
+                                duration: 5
+                            }))
+                        }
+                    })()
+                }
 				<Modal
 					centered
 					// title="Sign Up"
@@ -65,7 +100,16 @@ class Component extends React.Component {
 						this.setState({ lastName: e.target.value });
 						}}
 					/>
-
+					<div style={{ color: "black", opacity: 1, paddingTop: "11.75px" }}>
+						<span style={{ color: "rgb(255, 77, 79)" }}>{"* "}</span>
+						Email
+					</div>
+					<Input
+						value={this.state.email}
+						onChange={(e) => {
+						this.setState({ email: e.target.value });
+						}}
+					/>
 					<div style={{ color: "black", opacity: 1, paddingTop: "11.75px" }}>
 						<span style={{ color: "rgb(255, 77, 79)" }}>{"* "}</span>
 						Username
@@ -95,7 +139,13 @@ class Component extends React.Component {
 						key="submit"
 						variant="success" 
 						onClick={() => {
-							
+							this.props.dispatch(LoginAction.LoginCreateStart(JSON.stringify({
+								"firstName": this.state.firstName,
+								"lastName": this.state.lastName,
+								"email": this.state.email,
+								"username": this.state.username,
+								"password": this.state.password
+							})));
 						}}>
 						Register
 					</Button>
@@ -175,8 +225,18 @@ class Component extends React.Component {
 							</Form.Item>
 							</Form>
 							<div style={{padding: "10px"}}>
-							<Button 
-								variant="success" style={{width: "100%"}}
+							<Button variant="success" style={{width: "100%"}}
+								onClick={()=>{
+									if(this.state.loginUsername === "" || this.state.loginPassword===""){
+										this.props.dispatch(AlertAction.alertStart("Empty username or password"))
+									}
+									else{
+										this.props.dispatch(LoginAction.LoginStart(JSON.stringify({
+											"username": this.state.loginUsername,
+											"password": this.state.loginPassword
+										})))
+									}
+								}}
 								>
 								Login
 							</Button>
@@ -199,6 +259,9 @@ class Component extends React.Component {
 
 }
 
-const Redux = connect(store => ({}))(Component);
+const Redux = connect(store => ({
+    LoginReducer: store.LoginReducer,
+    AlertReducer: store.AlertReducer
+}))(Component);
 
 export const IndexPage = Redux;
