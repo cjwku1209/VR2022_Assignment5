@@ -94,15 +94,15 @@ api.post('/api/login', (request, response)=>{
 	})
 })
 
-api.post('/api/update-controller', (request, response)=>{
-	let validUser = checkIfUserExist(request.body.user_id)
+api.post('/api/update-controller/:_id', (request, response)=>{
+	let validUser = checkIfUserExist(request.params._id)
 	if(validUser=== false){
 		response.status(400).json({
 			success: false,
 			message: "User does not exist"
 		});
 	}
-	Controller.findOneAndUpdate({user_id: request.body.user_id}, request.body).then((controller)=>{
+	Controller.findOneAndUpdate({user_id: request.params._id}, request.body).then((controller)=>{
 		response.status(201).json({
 			success: true,
 			controller: request.body,
