@@ -3,7 +3,6 @@ import {users} from "../models/users";
 import {Controller} from "../models/controller"
 export const api = express.Router();
 
-
 function checkIfUserExist(uid) {
 	users.findById(uid).then((user)=>{
 		return true;
@@ -112,14 +111,14 @@ api.post('/api/update-controller/:_id', (request, response)=>{
 })
 
 api.post('/api/controller', (request, response)=>{
-	let validUser = checkIfUserExist(request.body.user_id)
+	let validUser = checkIfUserExist(request.body._id)
 	if(validUser=== false){
 		response.status(400).json({
 			success: false,
 			message: "User does not exist"
 		});
 	}
-	Controller.find({user_id: request.body.user_id}).then((controller)=>{
+	Controller.find({user_id: request.body._id}).then((controller)=>{
 		response.status(201).json({
 			success: true,
 			controller: controller,

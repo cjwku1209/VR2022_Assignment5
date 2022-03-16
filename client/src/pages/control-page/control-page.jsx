@@ -17,7 +17,7 @@ class Component extends React.Component {
             movement: "NONE",
             shoot: false,
             fireRate: 0.5,
-            force: 1000,
+            force: 1,
             levitation: 0
 		}
 	}
@@ -126,8 +126,8 @@ class Component extends React.Component {
                         <Slider
                             style={{width: "30%"}}
                             min={0} 
-                            max={5000}
-                            step={100}
+                            max={2}
+                            step={0.1}
                             value={this.state.force}
                             onChange={(val)=>{
                                 this.setState({force:val}, ()=>{
