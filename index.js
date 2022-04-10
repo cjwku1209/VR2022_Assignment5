@@ -72,13 +72,13 @@ server.on('upgrade', (request, socket, head) => {
 	});
   });
 
-app.use(session({
-	secret: 'secret',
-	resave: false,
-	saveUninitialized: false,
-	store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/VR2022_HW5'}),
-	cookie: { maxAge: 600 * 1000 },
-}))
+// app.use(session({
+// 	secret: 'secret',
+// 	resave: false,
+// 	saveUninitialized: false,
+// 	store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/VR2022_HW5'}),
+// 	cookie: { maxAge: 600 * 1000 },
+// }))
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-app.use(users);
+// app.use(users);
 

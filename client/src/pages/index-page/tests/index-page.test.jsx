@@ -5,12 +5,12 @@ import { Provider } from "react-redux";
 import { Store } from '../../../redux/store';
 import { IndexPage } from '../index-page';
 
-it('should render welcome message', () => {
-    render(
-        <Provider store={Store}>
-            <IndexPage/>
-        </Provider>
-    );
-    const message = "Welcome to Conjur!";
-    expect(screen.queryByText(message)).toBeInTheDocument();
-});
+// it('should render welcome message', () => {
+//     render(
+//         <Provider store={Store}>
+//             <IndexPage/>
+//         </Provider>
+//     );
+//     const message = "Welcome to Conjur!";
+//     expect(screen.queryByText(message)).toBeInTheDocument();
+// });
