@@ -34,7 +34,7 @@ jobs:
           name: conjur
           path: build/
       - run: docker-compose up --build -d
-      - run: docker-compose run e2e yarn test
+      # - run: docker-compose run e2e yarn test
   test:
     name: test
     runs-on: ubuntu-latest
