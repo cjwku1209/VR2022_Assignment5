@@ -78,7 +78,7 @@ class Component extends React.Component {
                             borderRadius: "50%",
                             backgroundColor: "white"
                         }}>
-                            <Tilt tiltAngleXManual={this.state.angleX} tiltAngleYManual={this.state.angleY} glareEnable={false}>
+                            <Tilt tiltAngleXManual={-1*this.state.angleX} tiltAngleYManual={this.state.angleY} glareEnable={false}>
                                 <div style={{
                                     width: "100%",
                                     height: "100%",
